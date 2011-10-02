@@ -9,6 +9,53 @@
 #include "rand_ops.h"
 
 
+
+// [0,n]
+// This is the one the others are implemented in terms of
+// because it is total: no error conditions, can access
+// the full range of possible randomness, etc.
+randval_t rand_zero_through_n(rand_ops_t ops, randval_t n) {
+	assert(n >= 0);
+
+	//Major optimization:
+	randval_t wanted_bits;
+	{
+		randval_t unwanted_bits = ~0;
+		randval_t n_tmp = n;
+		while(n_tmp != 0) {
+			n_tmp >>= 1;
+			unwanted_bits <<= 1;
+		}
+		wanted_bits = ~unwanted_bits;
+	}
+
+	randval_t ret;
+	do {
+		ret = ops.rand_val() & wanted_bits;
+	} while (ret > n);
+	return ret;
+}
+
+// [0,n)
+randval_t rand_zero_to_n(rand_ops_t ops, randval_t n) {
+	assert(n > 0);
+	return rand_zero_through_n(ops, n-1);
+}
+
+// [m,n]
+randval_t rand_m_through_n(rand_ops_t ops, randval_t m, randval_t n) {
+	assert(n >= m);
+	return m + rand_zero_through_n(ops, n - m);
+}
+
+// [m,n)
+randval_t rand_m_to_n(rand_ops_t ops, randval_t m, randval_t n) {
+	assert(n > m);
+	return m + rand_zero_through_n(ops, n - m - 1);
+}
+
+
+
 void libc_rand_init(void) {
 	// 1-second precision is annoying
 	// Even, run 'd' two times in one second and get the same results!

@@ -101,7 +101,7 @@ int main(int argc, char** argv)
 
 	for(randval_t i = 0; i < times; ++i) {
 		do {
-			results[i] = rand_ops.rand_val() % sides + 1;
+			results[i] = rand_m_through_n(rand_ops, 1, sides);
 		} while(g_hash_table_lookup(already, &results[i]));
 
 		if(factorial) {
