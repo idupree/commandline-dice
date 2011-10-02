@@ -106,6 +106,7 @@ int main(int argc, char** argv)
 	}
 
 	randval_t* results = (randval_t*)malloc(times * sizeof(randval_t));
+	errif(!results, "Failed to allocate %lli results!\n", times);
 	GHashTable* already = g_hash_table_new(&g_int64_hash, &g_int64_equal);
 
 	for(randval_t i = 0; i < times; ++i) {
