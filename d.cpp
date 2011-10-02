@@ -24,10 +24,6 @@ randval_t rand_val(void) {
 		+ ((randval_t)rand()<<16) + ((randval_t)rand()<<31);
 }
 
-void pr(void* k, void* v, void* ud) {
-	printf(":%i %i\n", *(int*)k, *(int*)v);
-}
-
 const char help_string[] =
 "Usage: d sides [times[!]]\n"
 "\t`d` rolls imaginary dice.\n"
