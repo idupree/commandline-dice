@@ -26,6 +26,9 @@ To use:
 			numbers then must be no greater than sides.
 </pre>
 
+If you put it on your PATH, you can just type 'd 6' anywhere
+to roll a d6, or 'd 20' or even 'd 42'.
+
 To build:
 --------
 
