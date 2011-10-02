@@ -34,6 +34,9 @@ randval_t rand_val(void) {
 		+ ((randval_t)rand()<<16) + ((randval_t)rand()<<31);
 }
 
+void rand_deinit(void) {
+}
+
 const char help_string[] =
 "Usage: d sides [[times][!]]\n"
 "\t`d` rolls imaginary dice.\n"
@@ -123,4 +126,6 @@ int main(int argc, char** argv)
 
 	g_hash_table_destroy(already);
 	free(results);
+
+	rand_deinit();
 }
