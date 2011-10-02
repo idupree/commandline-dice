@@ -42,6 +42,8 @@ n -1
 
 n 329497823749823749823749823
 
+n 4 7234879832747238786234786342768
+
 n 32x
 
 n x32
@@ -79,6 +81,25 @@ n 2 -1!
 n 2.5
 
 d 1000000000000000
+
+#negative numbers vs. option prefix: hmm:
+
+n -0
+
+d 1 -0
+
+n -help
+
+# The right size numbers that a visual inspection
+# of just about any roll can show that it's doing
+# the right thing with respect to (non)repetition
+# etc.:
+
+d 10 !
+
+d 10 9!
+
+d 10 10
 
 doexit 0 'All exit statuses were correct!'
 
