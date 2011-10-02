@@ -87,6 +87,10 @@ const rand_ops_t libc_rand_ops = {
 static FILE* urandom_handle;
 void urandom_rand_init(void) {
 	urandom_handle = fopen("/dev/urandom", "rb");
+	if(!urandom_handle) {
+		fprintf(stderr, "Opening /dev/urandom failed!\n");
+		exit(1);
+	}
 }
 
 randval_t urandom_rand_val(void) {
