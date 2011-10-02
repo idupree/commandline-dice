@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <sys/time.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "rand_ops.h"
 
