@@ -37,6 +37,31 @@ randval_t rand_val(void) {
 void rand_deinit(void) {
 }
 
+// Use C std lib rather than, say, syscalls, because
+// buffering /dev/urandom seems good when generating
+// large numbers of random numbers, and doesn't cost
+// much for small amounts.
+static FILE* urandom_handle;
+void urandom_rand_init(void) {
+	urandom_handle = fopen("/dev/urandom", "rb");
+}
+
+randval_t urandom_rand_val(void) {
+	randval_t ret;
+	fread(&ret, sizeof(ret), 1, urandom_handle);
+	if(ret < 0) {
+		//This interface demands nonnegative numbers.
+		//Using ~ keeps it still evenly distributed.
+		ret = ~ret;
+	}
+	return ret;
+}
+
+void urandom_rand_deinit(void) {
+	fclose(urandom_handle);
+}
+
+
 const char help_string[] =
 "Usage: d sides [[times][!]]\n"
 "\t`d` rolls imaginary dice.\n"
