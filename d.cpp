@@ -8,6 +8,16 @@
 #include <glib.h>
 #include <errno.h>
 
+void errif(bool cond, const char* fmt, ...) {
+	if(cond) {
+		va_list args;
+		va_start(args, fmt);
+		vfprintf(stderr, fmt, args);
+		va_end(args);
+		exit(1);
+	}
+}
+
 typedef long long int randval_t;
 
 void rand_init(void) {
@@ -58,34 +68,45 @@ int main(int argc, char** argv)
 
 	rand_init();
 
-	//In case of overflow, atoll returns max (long)long. huh.
-	randval_t sides = atoll(argv[1]);
-	if(sides <= 0) {
-		fprintf(stderr, "sides = %lli is too negative.\n", sides);
-		exit(1);
-	}
-	int times = 1;
-	bool factorial = false;
-	if(argc >= 3) {
+	randval_t sides;
+	{
+		const char* sides_arg = argv[1];
 		char* nextc;
 		errno = 0;
-		times = strtol(argv[2], &nextc, 0);
+		sides = strtoll(sides_arg, &nextc, 0);
+		errif(nextc == sides_arg || sides <= 0, "Sides ('%s'?) must be a positive number.\n", sides_arg);
+		errif(errno == ERANGE && sides == LLONG_MAX, "Implementation limit: sides ('%s') must be no greater than %lli (*pout*)\n", sides_arg, LLONG_MAX);
+		errif(*nextc != '\0', "Sides ('%s') must contain only a number.", sides_arg);
+	}
+	randval_t times = 1;
+	bool factorial = false;
+	if(argc >= 3) {
+		const char* times_arg = argv[2];
+		char* nextc;
+		errno = 0;
+		times = strtoll(times_arg, &nextc, 0);
+		errif(times < 0, "Can't take an action less than zero (%lli) times!\n", times);
+		errif(errno == ERANGE && sides == LLONG_MAX, "Implementation limit: times ('%s') must be no greater than %lli (*pout*)\n", times_arg, LLONG_MAX);
 		if(*nextc == '!') {
 			factorial = true;
-			if(nextc == argv[2]) {
+			if(nextc == times_arg) {
 				times = sides;
 			}
-			if(times > sides) {
-				fprintf(stderr, "can't pigeonhole %i nums in %lli possibilities\n", times, sides);
-				exit(1);
-			}
+			++nextc;
+			errif(times > sides, "Can't pigeonhole %i nums in %lli possibilities.\n", times, sides);
 		}
+		if(times == 0) {
+			// This is allowed, but helpfully point out why
+			// the user is getting zero output.
+			fprintf(stderr, "(You roll the die zero times.)\n");
+		}
+		errif(nextc == times_arg || *nextc != '\0', "Times ('%s'?) must be a non-negative number and/or \"!\".\n", times_arg);
 	}
 
 	randval_t* results = (randval_t*)malloc(times * sizeof(randval_t));
-	GHashTable* already = g_hash_table_new(&g_int_hash, &g_int_equal);
+	GHashTable* already = g_hash_table_new(&g_int64_hash, &g_int64_equal);
 
-	for(int i = 0; i < times; ++i) {
+	for(randval_t i = 0; i < times; ++i) {
 		do {
 			results[i] = rand_val() % sides + 1;
 		} while(g_hash_table_lookup(already, &results[i]));
