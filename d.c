@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 
 	errif(argc >= 4, "Too many arguments! Two at most: `d sides [times]`\n");
 
-	rand_ops_t rand_ops = libc_rand_ops;
+	rand_ops_t rand_ops = urandom_rand_ops;
 
 	rand_ops.rand_init();
 
