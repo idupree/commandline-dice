@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 		sides = strtoll(sides_arg, &nextc, 10);
 		errif(nextc == sides_arg || sides <= 0, "Sides ('%s'?) must be a positive number.\n", sides_arg);
 		errif(errno == ERANGE && sides == LLONG_MAX, "Implementation limit: sides ('%s') must be no greater than %lli (*pout*)\n", sides_arg, LLONG_MAX);
-		errif(*nextc != '\0', "Sides ('%s') must contain only a number.", sides_arg);
+		errif(*nextc != '\0', "Sides ('%s') must contain only a number.\n", sides_arg);
 	}
 	randval_t times = 1;
 	bool factorial = false;
