@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 	//In case of overflow, atoll returns max (long)long. huh.
 	randval_t sides = atoll(argv[1]);
 	if(sides <= 0) {
-		fprintf(stderr, "sides = %lli is too negative.", sides);
+		fprintf(stderr, "sides = %lli is too negative.\n", sides);
 		exit(1);
 	}
 	int times = 1;
