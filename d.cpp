@@ -35,7 +35,7 @@ randval_t rand_val(void) {
 }
 
 const char help_string[] =
-"Usage: d sides [times[!]]\n"
+"Usage: d sides [[times][!]]\n"
 "\t`d` rolls imaginary dice.\n"
 "\n"
 "\t`d 6` prints a number from 1 to 6 inclusive.\n"
