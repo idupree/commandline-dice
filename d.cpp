@@ -88,7 +88,11 @@ int main(int argc, char** argv)
 		do {
 			results[i] = rand_val() % sides + 1;
 		} while(g_hash_table_lookup(already, &results[i]));
-		g_hash_table_insert(already, &results[i], &results[i]);
+
+		if(factorial) {
+			g_hash_table_insert(already, &results[i], &results[i]);
+		}
+
 		printf("%lld\n", results[i]);
 	}
 //	g_hash_table_foreach(already, pr, NULL);
