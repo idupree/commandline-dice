@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 		const char* sides_arg = argv[1];
 		char* nextc;
 		errno = 0;
-		sides = strtoll(sides_arg, &nextc, 0);
+		sides = strtoll(sides_arg, &nextc, 10);
 		errif(nextc == sides_arg || sides <= 0, "Sides ('%s'?) must be a positive number.\n", sides_arg);
 		errif(errno == ERANGE && sides == LLONG_MAX, "Implementation limit: sides ('%s') must be no greater than %lli (*pout*)\n", sides_arg, LLONG_MAX);
 		errif(*nextc != '\0', "Sides ('%s') must contain only a number.", sides_arg);
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 		const char* times_arg = argv[2];
 		char* nextc;
 		errno = 0;
-		times = strtoll(times_arg, &nextc, 0);
+		times = strtoll(times_arg, &nextc, 10);
 		errif(times < 0, "Can't take an action less than zero (%lli) times!\n", times);
 		errif(errno == ERANGE && sides == LLONG_MAX, "Implementation limit: times ('%s') must be no greater than %lli (*pout*)\n", times_arg, LLONG_MAX);
 		if(*nextc == '!') {
