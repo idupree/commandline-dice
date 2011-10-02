@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 		sides = strtoll(sides_arg, &nextc, 10);
 		errif(nextc == sides_arg || sides <= 0, "Sides ('%s'?) must be a positive number.\n", sides_arg);
 		errif(errno == ERANGE && sides == LLONG_MAX, "Implementation limit: sides ('%s') must be no greater than %lli (*pout*)\n", sides_arg, LLONG_MAX);
-		errif(*nextc != '\0', "Sides ('%s') must contain only a number.\n", sides_arg);
+		errif(*nextc != '\0', "Sides ('%s') must contain only an integer number.\n", sides_arg);
 	}
 	randval_t times = 1;
 	bool factorial = false;
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 			// the user is getting zero output.
 			fprintf(stderr, "(You roll the die zero times.)\n");
 		}
-		errif(nextc == times_arg || *nextc != '\0', "Times ('%s'?) must be a non-negative number and/or \"!\".\n", times_arg);
+		errif(nextc == times_arg || *nextc != '\0', "Times ('%s'?) must be a non-negative integer and/or \"!\".\n", times_arg);
 	}
 
 	randval_t* results = (randval_t*)malloc(times * sizeof(randval_t));
