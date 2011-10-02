@@ -20,7 +20,13 @@ void errif(bool cond, const char* fmt, ...) {
 
 typedef long long int randval_t;
 
-void rand_init(void) {
+typedef struct rand_ops_t {
+	void (*rand_init)(void);
+	void (*rand_deinit)(void);
+	randval_t (*rand_val)(void);
+} rand_ops_t;
+
+void libc_rand_init(void) {
 	// 1-second precision is annoying
 	// Even, run 'd' two times in one second and get the same results!
 	// #include <time.h> ..... srand(time(NULL));
@@ -29,13 +35,19 @@ void rand_init(void) {
 	srand(now.tv_usec ^ now.tv_sec);
 }
 
-randval_t rand_val(void) {
+randval_t libc_rand_val(void) {
 	return ((randval_t)rand()) + ((randval_t)rand()>>16)
 		+ ((randval_t)rand()<<16) + ((randval_t)rand()<<31);
 }
 
-void rand_deinit(void) {
+void libc_rand_deinit(void) {
 }
+
+const rand_ops_t libc_rand_ops = {
+	.rand_init = libc_rand_init,
+	.rand_deinit = libc_rand_deinit,
+	.rand_val = libc_rand_val
+};
 
 // Use C std lib rather than, say, syscalls, because
 // buffering /dev/urandom seems good when generating
@@ -60,6 +72,12 @@ randval_t urandom_rand_val(void) {
 void urandom_rand_deinit(void) {
 	fclose(urandom_handle);
 }
+
+const rand_ops_t urandom_rand_ops = {
+	.rand_init = urandom_rand_init,
+	.rand_deinit = urandom_rand_deinit,
+	.rand_val = urandom_rand_val
+};
 
 
 const char help_string[] =
@@ -96,7 +114,9 @@ int main(int argc, char** argv)
 
 	errif(argc >= 4, "Too many arguments! Two at most: `d sides [times]`\n");
 
-	rand_init();
+	rand_ops_t rand_ops = libc_rand_ops;
+
+	rand_ops.rand_init();
 
 	randval_t sides;
 	{
@@ -139,7 +159,7 @@ int main(int argc, char** argv)
 
 	for(randval_t i = 0; i < times; ++i) {
 		do {
-			results[i] = rand_val() % sides + 1;
+			results[i] = rand_ops.rand_val() % sides + 1;
 		} while(g_hash_table_lookup(already, &results[i]));
 
 		if(factorial) {
@@ -152,5 +172,5 @@ int main(int argc, char** argv)
 	g_hash_table_destroy(already);
 	free(results);
 
-	rand_deinit();
+	rand_ops.rand_deinit();
 }
