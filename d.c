@@ -1,4 +1,4 @@
-//bash -c 'gcc -O2 -Wall d.cpp `pkg-config --cflags --libs glib-2.0` -o ../d' 
+//bash -c 'gcc -O2 -Wall -std=c99 d.c `pkg-config --cflags --libs glib-2.0` -o ../d'
 
 #include <stdio.h>
 #include <stdlib.h>
