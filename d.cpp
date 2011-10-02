@@ -88,7 +88,7 @@ int main(int argc, char** argv)
 		errno = 0;
 		times = strtoll(times_arg, &nextc, 10);
 		errif(times < 0, "Can't take an action less than zero (%lli) times!\n", times);
-		errif(errno == ERANGE && sides == LLONG_MAX, "Implementation limit: times ('%s') must be no greater than %lli (*pout*)\n", times_arg, LLONG_MAX);
+		errif(errno == ERANGE && times == LLONG_MAX, "Implementation limit: times ('%s') must be no greater than %lli (*pout*)\n", times_arg, LLONG_MAX);
 		if(*nextc == '!') {
 			factorial = true;
 			if(nextc == times_arg) {
