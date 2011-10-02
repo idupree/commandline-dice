@@ -8,6 +8,8 @@
 #include <glib.h>
 #include <errno.h>
 
+typedef long long int randval_t;
+
 void rand_init(void) {
 	// 1-second precision is annoying
 	// Even, run 'd' two times in one second and get the same results!
@@ -17,11 +19,14 @@ void rand_init(void) {
 	srand(now.tv_usec ^ now.tv_sec);
 }
 
+randval_t rand_val(void) {
+	return ((randval_t)rand()) + ((randval_t)rand()>>16)
+		+ ((randval_t)rand()<<16) + ((randval_t)rand()<<31);
+}
+
 void pr(void* k, void* v, void* ud) {
 	printf(":%i %i\n", *(int*)k, *(int*)v);
 }
-
-typedef long long int randval_t;
 
 int main(int argc, char** argv)
 {
@@ -54,10 +59,7 @@ int main(int argc, char** argv)
 	GHashTable* already = g_hash_table_new(&g_int_hash, &g_int_equal);
 	for(int i = 0; i < times; ++i) {
 		do {
-			results[i] = ((randval_t)rand()+((randval_t)rand()>>16)
-					+((randval_t)rand()<<16)+((randval_t)rand()<<31))
-				% sides
-				+ 1;
+			results[i] = rand_val() % sides + 1;
 		} while(g_hash_table_lookup(already, &results[i]));
 		g_hash_table_insert(already, &results[i], &results[i]);
 		printf("%lld\n", results[i]);
