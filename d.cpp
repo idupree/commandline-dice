@@ -1,6 +1,5 @@
 //bash -c 'gcc -O2 -Wall d.cpp `pkg-config --cflags --libs glib-2.0` -o ../d' 
 
-//1-second precision is annoying #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +7,15 @@
 #include <sys/time.h>
 #include <glib.h>
 #include <errno.h>
+
+void rand_init(void) {
+	// 1-second precision is annoying
+	// Even, run 'd' two times in one second and get the same results!
+	// #include <time.h> ..... srand(time(NULL));
+	struct timeval now;
+	gettimeofday(&now, NULL);
+	srand(now.tv_usec ^ now.tv_sec);
+}
 
 void pr(void* k, void* v, void* ud) {
 	printf(":%i %i\n", *(int*)k, *(int*)v);
@@ -17,10 +25,8 @@ typedef long long int randval_t;
 
 int main(int argc, char** argv)
 {
-	struct timeval now;
-	gettimeofday(&now, NULL);
-	srand(now.tv_usec ^ now.tv_sec);
-	//srand(time(NULL));
+	rand_init();
+
 	//In case of overflow, atoll returns max (long)long. huh.
 	randval_t sides = atoll(argv[1]);
 	if(sides < 0) {
