@@ -66,6 +66,8 @@ int main(int argc, char** argv)
 		exit(0);
 	}
 
+	errif(argc >= 4, "Too many arguments! Two at most: `d sides [times]`\n");
+
 	rand_init();
 
 	randval_t sides;
