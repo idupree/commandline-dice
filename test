@@ -20,14 +20,14 @@ printf 'but it also makes it easy to visually inspect the results.\n\n'
 
 d() {
 	printf '%s\n' "> d $*"
-	../d "$@" || doexit 1 'That should have exit-success:ed!'
+	./d "$@" || doexit 1 'That should have exit-success:ed!'
 	printf '\n'
 }
 
 #n = not d: should fail!
 n() {
 	printf '%s\n' "!> d $*"
-	{ ! ../d "$@"; } || doexit 1 'That should have exit-failure:d!'
+	{ ! ./d "$@"; } || doexit 1 'That should have exit-failure:d!'
 	printf '\n'
 }
 
