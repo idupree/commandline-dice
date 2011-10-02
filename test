@@ -1,0 +1,84 @@
+#!/bin/sh
+
+set -eu
+
+trap 'printf '\''\n\nTestsuite is buggy!\n\n'\''' EXIT
+doexit() {
+	exitstatus="$1"
+	shift
+	printf '\n'
+	printf "$@"
+	printf '\n\n'
+	trap - EXIT
+	exit "$exitstatus"
+}
+
+printf 'This only mechanically tests exit status,\n'
+printf 'but it also makes it easy to visually inspect the results.\n\n'
+
+#build here?
+
+d() {
+	printf '%s\n' "> d $*"
+	../d "$@" || doexit 1 'That should have exit-success:ed!'
+	printf '\n'
+}
+
+#n = not d: should fail!
+n() {
+	printf '%s\n' "!> d $*"
+	{ ! ../d "$@"; } || doexit 1 'That should have exit-failure:d!'
+	printf '\n'
+}
+
+
+d --help
+
+d 4
+
+n foo
+
+n -1
+
+n 329497823749823749823749823
+
+n 32x
+
+n x32
+
+n 0
+
+d 1
+
+d 1 1
+
+d 3 !
+
+n -3 !
+
+d 3 2!
+
+d 3 3!
+
+n 3 4!
+
+d 3 4
+
+n 0 !
+
+n 1 1 1
+
+d 2 0!
+
+d 2 0
+
+n 2 -1
+
+n 2 -1!
+
+n 2.5
+
+d 1000000000000000
+
+doexit 0 'All exit statuses were correct!'
+
