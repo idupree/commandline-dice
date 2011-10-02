@@ -101,5 +101,12 @@ d 10 9!
 
 d 10 10
 
+# It may fit in 64 bits, but there surely
+# isn't enough memory for it:
+
+n 1000000000000000000 !
+
+n 4 1000000000000000000
+
 doexit 0 'All exit statuses were correct!'
 
