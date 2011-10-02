@@ -82,8 +82,10 @@ int main(int argc, char** argv)
 			}
 		}
 	}
+
 	randval_t* results = (randval_t*)malloc(times * sizeof(randval_t));
 	GHashTable* already = g_hash_table_new(&g_int_hash, &g_int_equal);
+
 	for(int i = 0; i < times; ++i) {
 		do {
 			results[i] = rand_val() % sides + 1;
@@ -95,7 +97,7 @@ int main(int argc, char** argv)
 
 		printf("%lld\n", results[i]);
 	}
-//	g_hash_table_foreach(already, pr, NULL);
+
 	g_hash_table_destroy(already);
 	free(results);
 }
